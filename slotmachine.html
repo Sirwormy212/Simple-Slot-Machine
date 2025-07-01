@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang=""en" >
+<head>
+    <meta charset=""UTF-8" />
+    <meta name=""viewport" conttent=""width=device-width, initial-scale="1" />
+    <title>Classic Slot Machine</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #6b0f1a 0%, #b9131b 70%, #3a0009 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+    }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:fixed        
+                radial-gradient(rgba(255,255,255,0.03) 2px, transparent 3px),
+                radial-gradient(rgba(255,255,255,0.03) 2px, transparent 3px);
+            background-position: 0 0, 15px 15px;
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+    }
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background: #4d0b11;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow:      
+                0 0 15px 5px rgba(255,215,0,0.7),
+                inset 0 0 15px 3px rgba(255,215,0,0.8);
+            border: 5px solid gold;
+        }
+        .slot-machine {
+            display: flex;
+            gap: 20px;
+            background: #220305;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow:      
+            inset 0 0 15px 3px rgba(255,215,0,0.5);
+        }
+        .reel {
+            width: 100px;
+            height: 300px;
+            overflow: hidden;
+            border: 3px solid gold;
+            border-radius: 12px;
+            position: relative;
+            background: linear-gradient(180deg, #33090c, #5c1217);
+            box-shadow:     
+                0 0 10px 2px rgba(255, 215, 0, 0.8),
+                inset 0 4px 4px rgba(255,255,255,0.1);
+        }
+        .symbols {
+            display: flex;
+            flex-direction: column;
+        }
+        .symbol {
+            height: 100px;
+            font-size: 4rem;
+            text-align: center;
+            line-height: 100px;
+            user-select: none;
+            text-shadow: 1px 1px 2px #000;
+        }
+        .win-line {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            border-top: 4px solid limegreen;
+            border-bottom: 4px solid limegreen;
+            pointer-events: none;
+            box-sizing: border-box;
+            z-index: 10;
+            filter: drop-shadow(0 0 5px limegreen);
+        }
+        button {
+            cursor: pointer;
+            background: gold;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #4d0b11;
+            box-shadow: 0 0 15px 2px gold;
+            transition: background-color 0.3s ease;
+            user-select: none;
+        }
+        button:hover:not(:disabled) {
+            background-color: #ffea00;
+            box-shadow: 0 0 25px 5px gold;
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: default;
+            box-shadow: none;
+        }
+        #message {
+            font-size: 1.6rem;
+            min-height: 2rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px black;
+            user-select: none;
+        }
+        .key-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            border: 3px solid gold;
+            border-radius: 12px;
+            padding: 15px 25px;
+            width: 260px;
+            font-size: 1rem;
+            box-shadow: 0 0 15px 3px gold;
+            user-select: none;
+            z-index: 20;
+            color: #fff;
+        }
+        .key-panel h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 900;
+            letter-spacing: 1.2px;
+            color: gold;
+            text-shadow: 0 0 5px gold;
+        }
+        .key-panel ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .key-panel li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .key-panel .emoji-group {
+            font-size: 1.8rem;
+            min-width: 90px;
+            text-align: left;
+            user-select: none;
+            font-weight: 700;
+        }
+        .key-panel .win-text {
+            flex-grow: 1;
+            font-size: 1.1rem;
+            font-weight: 600;
+            user-select: none;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 160px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="slot-machine">
+        <div class="reel" id="reel1"><div class="symbols"></div/div><div class="win-line"></div>
+</div>
+    <div class="reel" id="reel2"><div class="symbols"></div><div class="win-line"></div>
+</div>   
+    <div class="reel" id="reel3"><div class="symbols"></div><div class="win-line"></div>
+</div>
+    </div><div>  
+    <button id="spinBtn">Spin</button>
+    <div id="message"></div>
+</div>
+
+
+
+<script>
+    const symbols = ["🍒", "🍋", "🍉", "⭐", "💎"];
+    const reelElements = [
+        document.querySelector("#reel1 .symbols"),
+        document.querySelector("#reel2 .symbols"),
+        document.querySelector("#reel3 .symbols"),
+    ];
+    const spinBtn = document.getElementById("spinBtn");
+    const message = document.getElementById("message");
+    const symbolHeight = 100;
+    const totalSymbolsCount = symbols.length * 20;
+                                    
+    function setupReels() {
+        reelElements.forEach(reel => {
+            reel.innerHTML = "";
+            for (let i = 0; i < 20; i++) {
+                symbols.forEach(sym => {
+                    const div = document.createElement("div");
+                    div.classList.add("symbol");        
+                    div.textContent = sym;
+                    reel.appendChild(div);
+                });
+            }
+        });
+    }
+
+    setupReels();
+
+    function getSymbolIndex(symbol) {
+        return symbols.indexOf(symbol);
+    }
+
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+
+function spinReel(reel, finalSymbol, duration, delay = 0) {
+    return new Promise(resolve => {
+        const finalIndex = getSymbolIndex(finalSymbol);
+        const middlePosition = symbols.length * 10 + finalIndex;
+    
+        setTimeout(() => {
+            const startTime = performance.now();
+
+            function animate() {
+                const now = performance.now();
+                const elapsed = now - startTime;
+                let progress = Math.min(elapsed / duration, 1);
+                const scrollSymbols =
+                    totalSymbolsCount * (1 - easeOutCubic(progress)) + middlePosition;
+                const translateY = -scrollSymbols * symbolHeight;
+                reel.style.transform = `translateY(${translateY}px)`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    resolve();
+                }
+            }
+            animate();
+        }, delay);
+    });
+}
+
+async function spin() {
+    spinBtn.disabled = true;
+    message.textContent = "";
+
+    const finalResults = [
+        symbols[Math.floor(Math.random() * symbols.length)],
+        symbols[Math.floor(Math.random() * symbols.length)],
+        symbols[Math.floor(Math.random() * symbols.length)],
+    ];
+
+    const durations = [2500, 3500, 4500];
+
+    const promises = reelElements.map((reel, i) =>
+        spinReel(reel, finalResults[i], durations[i])
+    );
+                                                                                                                                                            
+    await Promise.all(promises);
+                                                                                                                                                            
+    spinBtn.disabled = false;
+                                                                                                                                                            
+    const counts = {};
+    finalResults.forEach(s => counts[s] = (counts[s] || 0) + 1);
+                                                                                                                                                                
+    const uniqueSymbols = new Set(finalResults);
+                                                                                                                                                                
+    if (finalResults.every(s => s === "💎")) {
+        message.textContent = "💎💎💎 MEGA WIN! 🥳🥳🥳";
+    } else if (uniqueSymbols.size === 1) { // all same (but not 💎)
+        message.textContent = "💰 You win! 💰";
+    } else if (Object.values(counts).some(count => count === 2)) {
+        message.textContent = "So close! Try again.";
+    } else {
+        message.textContent = "Try again!";
+    }
+}
+
+    spinBtn.addEventListener("click", spin);
+</script>
+
+</body>
+</html>
